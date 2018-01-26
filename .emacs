@@ -12,16 +12,16 @@
 ;; Load An's favorite theme
 (add-to-list 'load-path "~/.emacs.d/themes/elisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-;;(load-theme ' t)
+(load-theme 'monokai t)
 
 ;; Startup Config for MSWindows
 (defun toggle-full-screen () (interactive) (shell-command "emacs_fullscreen.exe"))
 (global-set-key [f11] 'toggle-full-screen)
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-message t)
-;;(menu-bar-mode -1)
-;;(tool-bar-mode -1)
-;;(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;;;;------------------------------------------------------------------------
 ;; An empirical code segment to help emacs on cygwin with theme
@@ -50,7 +50,7 @@
  '(main-line-separator-style (quote chamfer))
  '(package-selected-packages
    (quote
-    (latex-preview-pane cdlatex color-theme-sanityinc-tomorrow rainbow-delimiters ## auctex)))
+    (viewer latex-math-preview latex-preview-pane cdlatex color-theme-sanityinc-tomorrow rainbow-delimiters ## auctex)))
  '(powerline-color1 "#1E1E1E")
  '(powerline-color2 "#111111")
  '(vc-annotate-background "#1f2124")
@@ -96,25 +96,10 @@
 (add-hook 'TeX-mode-hook 'auctex-theme)
 (add-hook 'TeX-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'TeX-mode-hook (lambda () (TeX-fold-mode 1)))
-
-;; Set the default PDF reader to SumatraPDF. The executable should be in PATH
-(setq TeX-view-style (quote (("^epsf$" "SumatraPDF.exe %f") ("." "yap -1 %dS %d"))))
- 
-(setq TeX-output-view-style 
-      (quote 
-       (("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "dvips %d -o && start %f") 
-        ("^dvi$" "." "yap -1 %dS %d") 
-        ("^pdf$" "." "SumatraPDF.exe -reuse-instance %o") 
-        ("^html?$" "." "start %o"))))
-
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 (setq-default TeX-PDF-mode t)
-
-(add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
-(add-to-list 'LaTeX-verbatim-environments "comment")
-
 ;; Specify LateX Config
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
@@ -122,19 +107,3 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'latex-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
-;; cdlatex Config
-;;(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
-;;(add-hook 'latex-mode-hook 'turn-on-cdlatex)   ; with Emacs latex mode
-;;latexmk
-(defun run-latexmk ()
-  (interactive)
-  (let ((TeX-save-query nil)
-        (TeX-process-asynchronous nil)
-        (master-file (TeX-master-file)))
-    (TeX-save-document "")
-    (TeX-run-TeX "latexmk"
-                 (TeX-command-expand "latexmk %t" 'TeX-master-file)
-                 master-file)
-    (if (plist-get TeX-error-report-switches (intern master-file))
-        (TeX-next-error t)
-      (minibuffer-message "latexmk done"))))
