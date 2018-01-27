@@ -88,6 +88,7 @@
 (require 'latex)
 (require 'tex-site)
 (require 'tex-mik)
+(require 'reftex)
 (defun auctex-theme()
   (when (window-system)
     (load-theme 'sanityinc-tomorrow-eighties t)
